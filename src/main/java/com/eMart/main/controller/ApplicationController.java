@@ -1,26 +1,20 @@
 package com.eMart.main.controller;
 
-import com.eMart.main.DTO.AddEmployeeDTO;
 import com.eMart.main.models.AccountDetails;
-import com.eMart.main.models.EmployeeDetails;
-import com.eMart.main.models.User;
 import com.eMart.main.repository.AccountDetailsRepositry;
 import com.eMart.main.repository.EmployeeDetailsRepositry;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class ApplicationController {
 
 
 	@Autowired
-	EmployeeDetailsRepositry employeeDetailsRepositry;
+    EmployeeDetailsRepositry employeeDetailsRepositry;
 	@Autowired
-	AccountDetailsRepositry accountDetailsRepositry;
+    AccountDetailsRepositry accountDetailsRepositry;
 
 
 	@RequestMapping("/")
@@ -68,7 +62,6 @@ public class ApplicationController {
 		accountDetailsRepositry.save(userObject);
 		return accountDetailsRepositry.findAll();
 	}
-
 
 
 

@@ -1,21 +1,44 @@
 package com.eMart.main.controller;
-
-import org.springframework.web.bind.annotation.PathVariable;
+import com.eMart.main.models.Invoice;
+import com.eMart.main.models.InvoiceBody;
+import com.eMart.main.repository.InvoiceBodyRepositry;
+import com.eMart.main.repository.InvoiceRepositry;
+import com.eMart.main.service.FileService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
 import java.util.List;
+
 
 @RestController
 public class MakerController {
+    @Autowired
+    FileService fileService;
+    @Autowired
+    InvoiceRepositry invoiceRepositry;
+    @Autowired
+    InvoiceBodyRepositry invoiceBodyRepositry;
 
-    @PostMapping("/csvupload/{file}")
-    public List<String> csvupload(@PathVariable MultipartFile file)
+    @PostMapping("/csvupload")
+    public List<Invoice> csvupload(@RequestParam("file") MultipartFile file)
     {
-        List<String> ls=new ArrayList<>();
+        //System.out.println(fileService.readFile(file));
+        return fileService.readFile(file);
 
-        return ls;
+    }
+
+    @GetMapping("/getdetails")
+    public List<Invoice> getinvoice()
+    {
+        return invoiceRepositry.findAll();
+    }
+
+    @GetMapping("/getbody")
+    public Iterable<InvoiceBody> getbody()
+    {
+        return invoiceBodyRepositry.findAllByInvoiceId(1);
     }
 }
