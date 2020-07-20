@@ -1,6 +1,5 @@
-package com.eMart.main.models;
+package com.eMart.main.entity;
 
-import com.eMart.main.models.AccountDetails;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

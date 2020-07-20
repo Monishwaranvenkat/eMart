@@ -1,6 +1,6 @@
 package com.eMart.main.repository;
 
-import com.eMart.main.models.EmployeeDetails;
+import com.eMart.main.entity.EmployeeDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

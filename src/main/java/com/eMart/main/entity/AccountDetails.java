@@ -1,4 +1,4 @@
-package com.eMart.main.models;
+package com.eMart.main.entity;
 
 import com.sun.istack.NotNull;
 import lombok.*;

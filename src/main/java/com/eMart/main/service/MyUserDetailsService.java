@@ -1,7 +1,7 @@
 package com.eMart.main.service;
 
-import com.eMart.main.models.AccountDetails;
-import com.eMart.main.models.MyUserDetails;
+import com.eMart.main.entity.AccountDetails;
+import com.eMart.main.entity.MyUserDetails;
 import com.eMart.main.repository.AccountDetailsRepositry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

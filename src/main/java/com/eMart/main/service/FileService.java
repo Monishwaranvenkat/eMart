@@ -1,7 +1,7 @@
 package com.eMart.main.service;
 
-import com.eMart.main.models.Invoice;
-import com.eMart.main.models.InvoiceBody;
+import com.eMart.main.entity.Invoice;
+import com.eMart.main.entity.InvoiceBody;
 import com.eMart.main.repository.InvoiceBodyRepositry;
 import com.eMart.main.repository.InvoiceRepositry;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +29,11 @@ public class FileService {
         {
             //return "Only CSV file accepted";
         }
-        Invoice invoice =new Invoice();
+        Invoice invoice=new Invoice();
         List<String[]> data=extractData(file);
         String[] line=data.get(0);
         invoice.setNumberOfProduct(Integer.parseInt(line[0]));
+       // invoice.setNumberOfProduct();
         invoice.setTotalAmount(Integer.parseInt(line[1]));
         invoice.setTimeStamp(Timestamp.valueOf(line[2]));
         //invoice.setHashCode(line[3]);

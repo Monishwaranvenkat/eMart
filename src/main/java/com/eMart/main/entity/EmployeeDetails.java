@@ -1,11 +1,10 @@
-package com.eMart.main.models;
+package com.eMart.main.entity;
 
 import com.sun.istack.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.engine.internal.Cascade;
 
 import javax.persistence.*;
 
