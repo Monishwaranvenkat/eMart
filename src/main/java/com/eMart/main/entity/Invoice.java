@@ -30,9 +30,9 @@ public class Invoice {
     @Column(name = "timestamp")
    // @NotNull
     private Timestamp timeStamp;
-   // @Transient
-   // private String hashCode;
-   //@JsonIgnoreProperties("invoice")
+
+    private String hashCode;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)

@@ -16,21 +16,21 @@ import javax.persistence.*;
 public class AccountDetails {
 
     @Id
-    @Column(name = "user_id")
+    @Column(name = "user_id",nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "password")
+    @Column(name = "password",nullable = false)
     @NonNull
     private String password;
 
-    @Column(name="isactive")
+    @Column(name="isactive",nullable = false)
     @NotNull
-    private int isactive;
+    private int isactive=1;
 
-    @Column(name = "islocked")
+    @Column(name = "islocked",nullable = false)
     @NotNull
-    private int islocked;
+    private int islocked=1;
 
     @Column
     @NotNull

@@ -19,10 +19,12 @@ import java.util.Date;
 
 public class InvoiceBody {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="product_id")
     private int id;
     @Column(name="vendor_code")
     private int vendorCode;
+
     @Column(name="product_Category")
     private String productCategory;
     @Column(name = "product_Description")

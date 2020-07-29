@@ -13,7 +13,8 @@ import javax.persistence.*;
 @ToString
 @Entity
 @NoArgsConstructor
-@Table(name = "employee_details")
+@Table(name = "employee_details",uniqueConstraints = {@UniqueConstraint(columnNames="email")})
+
 public class EmployeeDetails {
 
     @Id
@@ -21,19 +22,19 @@ public class EmployeeDetails {
     @NotNull
     private int id;
 
-    @Column(name = "name")
+    @Column(name = "name",nullable = false)
     @NotNull
     private String name;
 
-    @Column(name = "email")
+    @Column(name = "email",unique = true,nullable = false)
     @NotNull
     private String email;
 
-    @Column(name = "dob")
+    @Column(name = "dob",nullable = false)
     @NotNull
     private String dob;
 
-    @Column(name = "hire_date")
+    @Column(name = "hire_date",nullable = false)
     @NotNull
     private String hiredate;
 
