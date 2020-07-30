@@ -8,7 +8,6 @@ import com.eMart.main.repository.InvoiceRepositry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -24,8 +23,6 @@ public class FileService {
 
     @Autowired
     InvoiceRepositry invoiceRepositry;
-    @Autowired
-    InvoiceBodyRepositry invoiceBodyRepositry;
     private String content="";
     public List<Invoice> readFile(MultipartFile file) throws ExceptionHandler
     {
@@ -49,7 +46,6 @@ public class FileService {
         if(data==null)
         {
             throw new ExceptionHandler("Unable to extract data");
-
         }
 
         //Inserting data in database
@@ -59,7 +55,7 @@ public class FileService {
             invoice.setTotalAmount(Integer.parseInt(line[1]));
             invoice.setTimeStamp(Timestamp.valueOf(line[2]));
             invoice.setHashCode(line[3]);
-
+            System.out.println(generateHash(content));
 
             if(!line[3].equals(generateHash(content)))
             {
@@ -67,14 +63,21 @@ public class FileService {
                 throw new ExceptionHandler("Hash does'nt match");
             }
             content="";
+            if(invoiceRepositry.isHashExist(line[3])>0){
+                if(invoiceRepositry.isTimeStampExist(line[2])>0)
+                {
+                    throw new ExceptionHandler("Invoice already exist");
 
+                }
+            }
+
+         //   System.out.println(invoiceRepositry.isTimeStampExist(line[2]));
             Set<InvoiceBody> invoiceBodies=new HashSet<>();
             for (int i=1;i<data.size();i++)
             {
                 InvoiceBody invoiceBody=new InvoiceBody();
                 line=data.get(i);
                 // invoiceBody.setId(Integer.parseInt(line[0]));
-
                 invoiceBody.setVendorCode(Integer.parseInt(line[1]));
                 invoiceBody.setProductCategory(line[2]);
                 invoiceBody.setProductDescription(line[3]);
@@ -93,8 +96,8 @@ public class FileService {
                 invoiceBodies.add(invoiceBody);
             }
             //System.out.println(invoice);
-            //invoice.setInvoiceBodies(invoiceBodies);
-           // invoiceRepositry.save(invoice);
+            invoice.setInvoiceBodies(invoiceBodies);
+            invoiceRepositry.save(invoice);
         }catch (Exception exception){
             throw new ExceptionHandler(exception.getMessage());
         }
@@ -115,7 +118,6 @@ public class FileService {
         BufferedReader br;
         List<String[]> result = new ArrayList<>();
         try {
-
             String line;
             InputStream inputStream = file.getInputStream();
             br = new BufferedReader(new InputStreamReader(inputStream));
@@ -125,7 +127,7 @@ public class FileService {
                 if(isfirst)
                 content+=line;
                 isfirst=true;
-                result.add(line.replaceAll("\'","").split(","));
+                result.add(line.replaceAll("'","").split(","));
             }
         } catch (IOException e) {
             System.err.println(e.getMessage());
@@ -143,7 +145,7 @@ public class FileService {
             // getInstance() method is called with algorithm SHA-224
             MessageDigest md = MessageDigest.getInstance("SHA-224");
 
-            // digest() method is called
+
             // to calculate message digest of the input string
             // returned as array of byte
             byte[] messageDigest = md.digest(input.getBytes());
