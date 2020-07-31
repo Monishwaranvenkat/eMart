@@ -65,7 +65,7 @@ public class MakerController {
         List<InvoiceModel> ls=null;
         for (Object[] i:invoiceRepositry.getMyInvoice()
              ) {
-            System.out.println(i[0]);
+            System.out.println(i[1]);
         }
         //invoiceRepositry.getMyInvoice()
         return ls;

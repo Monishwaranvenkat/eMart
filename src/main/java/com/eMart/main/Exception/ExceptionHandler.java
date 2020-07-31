@@ -1,6 +1,6 @@
 package com.eMart.main.Exception;
 
-public class ExceptionHandler extends Exception{
+public class ExceptionHandler extends RuntimeException{
     public ExceptionHandler(String message) {
         super(message);
     }

@@ -34,10 +34,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
-                .antMatchers("/user/**").permitAll()
-                .antMatchers("/addemployee").permitAll()
+                .antMatchers("/updateemployee/**").permitAll()
                 .antMatchers("/authenticate").permitAll()
                 .antMatchers("/csvupload").permitAll()
+                .antMatchers("/getdetails").permitAll()
+                .antMatchers("/test").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().authenticated().
                 and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)

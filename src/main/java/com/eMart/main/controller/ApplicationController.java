@@ -2,13 +2,16 @@ package com.eMart.main.controller;
 
 import com.eMart.main.Exception.ExceptionHandler;
 import com.eMart.main.entity.AccountDetails;
+import com.eMart.main.entity.Supplier;
 import com.eMart.main.model.AuthenticationRequest;
 import com.eMart.main.model.AuthenticationResponse;
 import com.eMart.main.repository.AccountDetailsRepositry;
 import com.eMart.main.repository.EmployeeDetailsRepositry;
+import com.eMart.main.repository.SupplierRepositry;
 import com.eMart.main.service.MyUserDetailsService;
 import com.eMart.main.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,9 +19,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.http.HttpStatus.*;
 
 
 @RestController
@@ -32,6 +36,8 @@ public class ApplicationController  {
     EmployeeDetailsRepositry employeeDetailsRepositry;
 	@Autowired
     AccountDetailsRepositry accountDetailsRepositry;
+	@Autowired
+	SupplierRepositry supplierRepositry;
 
 	@Autowired
 	JwtUtil jwtbUtil;
@@ -85,9 +91,15 @@ public class ApplicationController  {
 
 
 	@PostMapping(path = "/addemployee")
-	public List<AccountDetails> addEmployee(@RequestBody AccountDetails accountDetails)
-	{
-		accountDetailsRepositry.save(accountDetails);
+	public List<AccountDetails> addEmployee(@RequestBody AccountDetails accountDetails) throws ExceptionHandler {
+
+
+		try{
+			accountDetailsRepositry.save(accountDetails);
+		}catch (Exception exception){
+			throw new ExceptionHandler("user already exist");
+		}
+
 		return accountDetailsRepositry.findAll();
 	}
 
@@ -115,5 +127,41 @@ public class ApplicationController  {
 	}
 
 
+	@PostMapping("/addsupplier")
+	public Boolean addSupplier(@RequestBody Supplier supplier) throws ExceptionHandler {
+
+		try{
+			supplierRepositry.save(supplier);
+		}catch (Exception exception){
+			throw new ExceptionHandler("supplier already exist");
+		}
+		return true;
+	}
+
+	@GetMapping("/getallsupplier")
+	public List<Supplier> getAllSuppliers(){
+		return supplierRepositry.findAll();
+	}
+
+	@GetMapping("/getsupplier")
+	public Object getsupplier(@RequestParam("id")Integer id)
+	{
+		try{
+			return supplierRepositry.findBysupplierID(id);
+		}catch (Exception exception){
+			return new ResponseEntity<>("User Not Found", NOT_FOUND);
+		}
+	}
+	@GetMapping("/getsuppliersbyname")
+	public List<Object[]> getSupplierByName()
+	{
+		return supplierRepositry.findAllCompanyname();
+	}
+
+	@GetMapping("/test")
+	public String test() throws ExceptionHandler {
+		throw new ExceptionHandler("my exception");
+
+	}
 
 }

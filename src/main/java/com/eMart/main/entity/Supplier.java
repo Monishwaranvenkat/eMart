@@ -13,19 +13,20 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames="email"),@UniqueConstraint(columnNames="phone")})
 public class Supplier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "supplierid",nullable = false)
     int supplierID;
     @Column(name = "companyname",nullable = false)
-    String companyName;
+    String companyname;
     @Column(name = "repname",nullable = false)
-    String repName;
+    String repname;
     @Column(name = "address",nullable = false)
     String address ;
     @Column(name = "phone",nullable = false)
-    int phone ;
+    long phone ;
     @Column(name = "email",nullable = false)
     String email;
 }
