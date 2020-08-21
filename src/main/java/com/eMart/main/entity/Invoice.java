@@ -20,23 +20,37 @@ public class Invoice {
     @Id
     @Column(name = "invoice_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @Column(name = "No_products")
    // @NotNull
-    private int numberOfProduct;
+    private Integer numberOfProduct;
     @Column(name = "total_amount")
    // @NotNull
-    private int  totalAmount;
+    private Integer  totalAmount;
     @Column(name = "timestamp")
    // @NotNull
     private Timestamp timeStamp;
 
+    @Column(name = "hashCode")
     private String hashCode;
+
+    @Column(name="supplierid")
+    private Integer supplierid;
+
+    @Column(name="status")
+    private Boolean status=false;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    private Set<InvoiceBody> invoiceBodies;
+    private Set<InvoiceSummary> invoiceSummaries=null;
 
-
+    public Invoice(Integer id, Integer numberOfProduct, Integer totalAmount, Timestamp timeStamp, Integer supplierid, Boolean status) {
+        this.id = id;
+        this.numberOfProduct = numberOfProduct;
+        this.totalAmount = totalAmount;
+        this.timeStamp = timeStamp;
+        this.supplierid = supplierid;
+        this.status = status;
+    }
 }

@@ -1,26 +1,31 @@
 package com.eMart.main.controller;
 
 import com.eMart.main.Exception.ExceptionHandler;
-import com.eMart.main.entity.AccountDetails;
-import com.eMart.main.entity.Supplier;
+import com.eMart.main.entity.*;
 import com.eMart.main.model.AuthenticationRequest;
 import com.eMart.main.model.AuthenticationResponse;
-import com.eMart.main.repository.AccountDetailsRepositry;
-import com.eMart.main.repository.EmployeeDetailsRepositry;
-import com.eMart.main.repository.SupplierRepositry;
-import com.eMart.main.service.MyUserDetailsService;
+import com.eMart.main.model.SupplierList;
+import com.eMart.main.repository.*;
+import com.eMart.main.service.*;
 import com.eMart.main.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import javax.persistence.criteria.Join;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -38,6 +43,10 @@ public class ApplicationController  {
     AccountDetailsRepositry accountDetailsRepositry;
 	@Autowired
 	SupplierRepositry supplierRepositry;
+	@Autowired
+	BarcodeService barcodeService;
+	@Autowired
+	ProductRepositry productRepositry;
 
 	@Autowired
 	JwtUtil jwtbUtil;
@@ -129,7 +138,6 @@ public class ApplicationController  {
 
 	@PostMapping("/addsupplier")
 	public Boolean addSupplier(@RequestBody Supplier supplier) throws ExceptionHandler {
-
 		try{
 			supplierRepositry.save(supplier);
 		}catch (Exception exception){
@@ -147,21 +155,67 @@ public class ApplicationController  {
 	public Object getsupplier(@RequestParam("id")Integer id)
 	{
 		try{
-			return supplierRepositry.findBysupplierID(id);
+			return supplierRepositry.findBysupplierid(id);
 		}catch (Exception exception){
 			return new ResponseEntity<>("User Not Found", NOT_FOUND);
 		}
 	}
 	@GetMapping("/getsuppliersbyname")
-	public List<Object[]> getSupplierByName()
+	public List<SupplierList> getSupplierByName()
 	{
-		return supplierRepositry.findAllCompanyname();
+		List<SupplierList> supplierList=new ArrayList<SupplierList>();
+		for (Object[] object:supplierRepositry.findAllCompanyname()) {
+
+			supplierList.add(new SupplierList((Integer)object[0],(String)object[1]));
+		}
+		return supplierList;
+	}
+	@Autowired
+	CategoryRepositry categoryRepositry;
+	@Autowired
+	PdfService pdfService;
+	@Autowired
+	InvoiceRepositry invoiceRepositry;
+	@Autowired
+	ProductService productService;
+	@Autowired
+	EmailService emailService;
+	@Autowired
+	MessageService messageService;
+	@Autowired
+	ProductDetailsRepositry productDetailsRepositry;
+	@PostMapping(value = "/test")
+	public List<Product> test() throws Exception {
+		//emailService.sendMail();
+		//messageService.sendSMS();
+	//productService.getCategory("Drink");
+	//	productService.verifyProducts(invoice.getInvoiceSummaries());
+
+	//productRepositry.save(product);
+		//throw new ExceptionHandler("my exception");
+		//System.out.println(categoryRepositry.findAll());
+		return productRepositry.findAll();
+
 	}
 
-	@GetMapping("/test")
-	public String test() throws ExceptionHandler {
-		throw new ExceptionHandler("my exception");
+	/*@PostMapping("/addproducts")
+	public String addproducts(@RequestBody Invoice products)
+	{
+		for (InvoiceSummary product:products.getInvoiceSummaries()
+			 ) {
 
-	}
+			if(! isFound(product.getProductCategory()))
+			{
+				//complete the code below
+				//send cofirmation request
+				//if ok
+				//addCategory(product.getProductCategory())
+				//else return "products not added
+			}
+			addProduct(product);
+		}
+		return "products added";
+	}*/
+
 
 }

@@ -2,8 +2,7 @@ package com.eMart.main.service;
 
 import com.eMart.main.Exception.ExceptionHandler;
 import com.eMart.main.entity.Invoice;
-import com.eMart.main.entity.InvoiceBody;
-import com.eMart.main.repository.InvoiceBodyRepositry;
+import com.eMart.main.entity.InvoiceSummary;
 import com.eMart.main.repository.InvoiceRepositry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class FileService {
     @Autowired
     InvoiceRepositry invoiceRepositry;
     private String content="";
-    public List<Invoice> readFile(MultipartFile file) throws ExceptionHandler
+    public Boolean readFile(MultipartFile file,Integer supplierid) throws ExceptionHandler
     {
         //check the file format
         if(!isCsv(Objects.requireNonNull(file.getOriginalFilename())))
@@ -55,6 +54,7 @@ public class FileService {
             invoice.setTotalAmount(Integer.parseInt(line[1]));
             invoice.setTimeStamp(Timestamp.valueOf(line[2]));
             invoice.setHashCode(line[3]);
+            invoice.setSupplierid(supplierid);
             System.out.println(generateHash(content));
 
             if(!line[3].equals(generateHash(content)))
@@ -63,27 +63,24 @@ public class FileService {
                 throw new ExceptionHandler("Hash does'nt match");
             }
             content="";
-            if(invoiceRepositry.isHashExist(line[3])>0){
-                if(invoiceRepositry.isTimeStampExist(line[2])>0)
-                {
+            if(invoiceRepositry.isInvoiceExist(line[3],line[2],supplierid)>0){
                     throw new ExceptionHandler("Invoice already exist");
-
-                }
             }
 
          //   System.out.println(invoiceRepositry.isTimeStampExist(line[2]));
-            Set<InvoiceBody> invoiceBodies=new HashSet<>();
+            Set<InvoiceSummary> invoiceSummaries=new HashSet<>();
             for (int i=1;i<data.size();i++)
             {
-                InvoiceBody invoiceBody=new InvoiceBody();
+                InvoiceSummary invoiceSummary =new InvoiceSummary();
                 line=data.get(i);
                 // invoiceBody.setId(Integer.parseInt(line[0]));
-                invoiceBody.setVendorCode(Integer.parseInt(line[1]));
-                invoiceBody.setProductCategory(line[2]);
-                invoiceBody.setProductDescription(line[3]);
-                invoiceBody.setCount(Integer.parseInt(line[4]));
-                invoiceBody.setCost(Double.parseDouble(line[5]));
-                invoiceBody.setCurrency(Double.parseDouble(line[6]));
+
+                invoiceSummary.setVendorCode(Integer.parseInt(line[1]));
+                invoiceSummary.setProductCategory(line[2]);
+                invoiceSummary.setProductDescription(line[3]);
+                invoiceSummary.setCount(Integer.parseInt(line[4]));
+                invoiceSummary.setCost(Double.parseDouble(line[5]));
+                invoiceSummary.setCurrency(line[6]);
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                 Date cDate=null;
                 try {
@@ -91,18 +88,17 @@ public class FileService {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                invoiceBody.setExpiryDate(cDate);
-                invoiceBody.setInvoice(invoice);
-                invoiceBodies.add(invoiceBody);
+                invoiceSummary.setExpiryDate(cDate);
+                invoiceSummary.setInvoice(invoice);
+                invoiceSummaries.add(invoiceSummary);
             }
             //System.out.println(invoice);
-            invoice.setInvoiceBodies(invoiceBodies);
+            invoice.setInvoiceSummaries(invoiceSummaries);
             invoiceRepositry.save(invoice);
         }catch (Exception exception){
             throw new ExceptionHandler(exception.getMessage());
         }
-
-        return invoiceRepositry.findAll();
+        return true;
     }
 
     //function to check the format is csv
@@ -123,7 +119,7 @@ public class FileService {
             br = new BufferedReader(new InputStreamReader(inputStream));
             boolean isfirst=false;
             while ((line = br.readLine()) != null) {
-                ///System.out.println(line);
+                System.out.println(line);
                 if(isfirst)
                 content+=line;
                 isfirst=true;

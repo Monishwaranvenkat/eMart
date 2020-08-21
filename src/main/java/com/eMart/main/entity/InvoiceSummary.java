@@ -15,28 +15,31 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-@Table(name = "invoice_body")
+@Table(name = "invoice_summary")
 
-public class InvoiceBody {
+public class InvoiceSummary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="product_id")
     private int id;
     @Column(name="vendor_code")
     private int vendorCode;
-
-    @Column(name="product_Category")
-    private String productCategory;
     @Column(name = "product_Description")
     private String productDescription;
+    @Column(name="product_Category")
+    private String productCategory;
     @Column(name = "count")
     private int count;
     @Column(name = "cost")
     private double cost;
     @Column(name = "currency")
-    private double currency;
+    private String currency;
     @Column(name = "expiry_date")
     private Date expiryDate;
+    @Column(name="status")
+    String status;
+    @Column(name = "return_reason")
+    String returnReason;
    // @JsonIgnore
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, optional = true)

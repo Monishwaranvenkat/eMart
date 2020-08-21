@@ -18,7 +18,7 @@ public class Supplier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "supplierid",nullable = false)
-    int supplierID;
+    int supplierid;
     @Column(name = "companyname",nullable = false)
     String companyname;
     @Column(name = "repname",nullable = false)
@@ -29,4 +29,6 @@ public class Supplier {
     long phone ;
     @Column(name = "email",nullable = false)
     String email;
+
+
 }

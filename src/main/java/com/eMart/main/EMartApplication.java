@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 
 @SpringBootApplication
-
+//@EnableScheduling
 public class EMartApplication {
 
 	public static void main(String[] args) {
