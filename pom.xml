@@ -178,9 +178,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-		 <plugins>
-   
 	</build>
-	
 
 </project>
+
